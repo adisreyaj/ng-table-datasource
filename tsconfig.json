@@ -16,10 +16,14 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"],
+    "paths": {
+      "@app/data/*": ["src/app/data/*"],
+      "@app/components/*": ["src/app/shared/components/*"],
+      "@app/classes/*": ["src/app/shared/classes/*"],
+      "@app/interfaces/*": ["src/app/shared/interfaces/*"],
+      "@app/modules/*": ["src/app/shared/modules/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
