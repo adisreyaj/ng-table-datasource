@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/
 import { Paginator } from '@app/components/paginate/paginate';
 import { Sorter } from '@app/components/sort/sort';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { UserDataSource } from './users-data-source';
 import { User } from './users.interface';
 import { UserService } from './users.service';
@@ -33,7 +34,7 @@ import { UserService } from './users.service';
             </tr>
           </tbody>
         </table>
-        <app-paginate [data]="users"></app-paginate>
+        <app-paginate [count]="(totalCount$ | async) || 0"></app-paginate>
       </ng-container>
     </div>
   `,
@@ -63,6 +64,7 @@ import { UserService } from './users.service';
 export class UsersComponent implements OnInit {
   userDataSource = new UserDataSource();
   users$: Observable<User[]> = this.userDataSource.data$;
+  totalCount$: Observable<number> = this.userDataSource.initialData$.pipe(map((data) => data.length));
 
   @ViewChild(Sorter) sorter: Sorter | null = null;
   @ViewChild(Paginator) paginator: Paginator | null = null;

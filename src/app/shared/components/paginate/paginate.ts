@@ -7,12 +7,13 @@ import { PageChangeEvent } from './paginate.interface';
 @Component({
   selector: 'app-paginate',
   template: ` <div class="flex items-center justify-between p-2 space-x-4">
-    <div>
-      <select name="page-size" class="p-1 rounded-md" [(ngModel)]="pageSize" (ngModelChange)="pageSizeChange($event)">
+    <div class="flex space-x-2">
+      <select name="page-size" class="p-1 rounded-md" [(ngModel)]="pageSize" (ngModelChange)="pageSizeChange()">
         <ng-container *ngFor="let item of pageSizes">
           <option [value]="item">{{ item }}</option>
         </ng-container>
       </select>
+      <p>{{ index + 1 }} of {{ count | pageSize: pageSize }}</p>
     </div>
     <div class="flex space-x-4">
       <div class="flex space-x-2">
@@ -22,7 +23,7 @@ import { PageChangeEvent } from './paginate.interface';
         </button>
       </div>
       <div class="flex space-x-2">
-        <button [disabled]="index === data?.length" (click)="next()">
+        <button [disabled]="index === (count | pageSize: pageSize) - 1" (click)="next()">
           <span>Next</span>
           <rmx-icon name="arrow-right-line"></rmx-icon>
         </button>
@@ -58,7 +59,7 @@ import { PageChangeEvent } from './paginate.interface';
 export class Paginator implements OnInit, HasInitializer {
   index = 0;
   @Input() pageSize = 5;
-  @Input() data: any[] = [];
+  @Input() count = 0;
   @Input() pageSizes: number[] = [5, 10, 15];
   @Output() pageChange = new EventEmitter<PageChangeEvent>();
 
@@ -69,18 +70,18 @@ export class Paginator implements OnInit, HasInitializer {
     this.initialized.next();
   }
 
-  pageSizeChange(value: number) {
+  pageSizeChange() {
     this.pageChange.emit({
-      length: this.data.length,
+      length: this.count,
       index: this.index,
-      pageSize: value,
+      pageSize: this.pageSize,
     });
   }
 
   next() {
     this.index += 1;
     this.pageChange.emit({
-      length: this.data.length,
+      length: this.count,
       index: this.index,
       pageSize: this.pageSize,
     });
@@ -88,7 +89,7 @@ export class Paginator implements OnInit, HasInitializer {
   prev() {
     this.index -= 1;
     this.pageChange.emit({
-      length: this.data.length,
+      length: this.count,
       index: this.index,
       pageSize: this.pageSize,
     });

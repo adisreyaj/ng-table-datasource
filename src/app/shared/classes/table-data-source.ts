@@ -84,8 +84,7 @@ export abstract class TableDataSource<T> {
     if (!this.paginateRef) {
       return data;
     }
-
-    const startIndex = this.paginateRef.index * this.paginateRef.pageSize;
-    return data.slice(startIndex, startIndex + this.paginateRef.pageSize);
+    const startIndex = this.paginateRef.index * +this.paginateRef.pageSize;
+    return data.slice(startIndex, startIndex + +this.paginateRef.pageSize);
   }
 }
