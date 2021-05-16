@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Paginator } from '@app/components/paginate/paginate';
 import { Sorter } from '@app/components/sort/sort';
 import { Observable } from 'rxjs';
@@ -69,7 +69,7 @@ export class UsersComponent implements OnInit {
   @ViewChild(Sorter) sorter: Sorter | null = null;
   @ViewChild(Paginator) paginator: Paginator | null = null;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     const users$ = this.userService.getUsers();
@@ -79,6 +79,7 @@ export class UsersComponent implements OnInit {
   ngAfterViewInit() {
     this.userDataSource.sort = this.sorter;
     this.userDataSource.paginate = this.paginator;
+    this.cdr.detectChanges();
   }
 
   trackBy(_: number, user: User) {
