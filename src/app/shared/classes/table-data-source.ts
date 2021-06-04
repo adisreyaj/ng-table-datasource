@@ -79,7 +79,9 @@ export abstract class TableDataSource<T> {
     const pageChange: Observable<PageChangeEvent | null | void> = this.paginateRef
       ? merge(this.paginateRef.pageChange, this.paginateRef.initialized)
       : of(null);
-    const sortedData = combineLatest([this.initialData$, sortChange]).pipe(map(this.sortData));
+    const sortedData = combineLatest([this.initialData$, sortChange]).pipe(
+      map(([initialData, event]) => this.sortData({ data: initialData, sortEvent: event }))
+    );
     const paginatedData = combineLatest([sortedData, pageChange]).pipe(map(([data]) => this.paginateData(data)));
 
     this.dataSubscription?.unsubscribe();
@@ -91,7 +93,7 @@ export abstract class TableDataSource<T> {
    * @param - data and the sort event
    * @returns - sorted array
    */
-  private sortData = ([data, sortEvent]: [T[], SortChangeEvent | null | void]) => {
+  private sortData = ({ data, sortEvent }: { data: T[]; sortEvent: SortChangeEvent | null | void }) => {
     if (!sortEvent) {
       return data;
     }
