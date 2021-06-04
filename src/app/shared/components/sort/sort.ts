@@ -21,18 +21,24 @@ export class Sorter implements OnInit, HasInitializer {
       this.direction = null;
       this.active = column;
     }
-    if (this.direction === null) {
-      direction = 'asc';
-    } else if (this.direction === 'asc') {
-      direction = 'desc';
-    } else if (this.direction === 'desc') {
-      direction = null;
-    }
+    direction = this.getNextDirection(this.direction);
     this.sortChange.emit({
       column,
       direction,
     });
     this.direction = direction;
+  }
+
+  private getNextDirection(currentDirection: SortDirection | null = null) {
+    let newDirection: SortDirection = null;
+    if (currentDirection === null) {
+      newDirection = 'asc';
+    } else if (currentDirection === 'asc') {
+      newDirection = 'desc';
+    } else if (currentDirection === 'desc') {
+      newDirection = null;
+    }
+    return newDirection;
   }
 }
 
