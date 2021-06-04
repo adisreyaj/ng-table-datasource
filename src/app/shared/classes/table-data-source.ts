@@ -6,9 +6,16 @@ import { Sorter } from '../components/sort/sort';
 import { SortChangeEvent } from '../components/sort/sort.interface';
 
 export abstract class TableDataSource<T> {
+  /**
+   * Observable that is used to drive the table
+   */
   private dataSubject = new BehaviorSubject<T[]>([]);
   data$ = this.dataSubject.asObservable();
 
+  /**
+   * Store the raw data for the table. The table to be shown
+   * in table can be filtered or sorted.
+   */
   private initialDataSubject = new BehaviorSubject<T[]>([]);
   initialData$ = this.initialDataSubject.asObservable();
 
@@ -16,6 +23,9 @@ export abstract class TableDataSource<T> {
   private paginateRef: Paginator | null = null;
   private dataSubscription: Subscription | null = null;
 
+  /**
+   * Connector for sort directive
+   */
   set sort(sort: Sorter | null) {
     if (sort) {
       this.sortRef = sort;
@@ -23,6 +33,9 @@ export abstract class TableDataSource<T> {
     }
   }
 
+  /**
+   * Connector for paginator component
+   */
   set paginate(paginate: Paginator | null) {
     if (paginate) {
       this.paginateRef = paginate;
@@ -73,6 +86,11 @@ export abstract class TableDataSource<T> {
     this.dataSubscription = paginatedData.subscribe((data) => this.dataSubject.next(data));
   }
 
+  /**
+   * Sort the data based on the sort options
+   * @param - data and the sort event
+   * @returns - sorted array
+   */
   private sortData = ([data, sortEvent]: [T[], SortChangeEvent | null | void]) => {
     if (!sortEvent) {
       return data;
@@ -80,6 +98,12 @@ export abstract class TableDataSource<T> {
     return this.sortLogic([...data], sortEvent);
   };
 
+  /**
+   * The data will be paginated and the splice of the original data will be
+   * returned.
+   * @param data - the sorted data
+   * @returns - paginated data
+   */
   private paginateData(data: T[]): T[] {
     if (!this.paginateRef) {
       return data;
