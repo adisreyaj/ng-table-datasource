@@ -1,12 +1,12 @@
 <main class="flex items-center justify-center w-screen h-screen py-4">
   <div class="h-full">
-    <h1 class="text-2xl font-bold">
+    <h1 class="text-2xl font-bold" *ngIf="!isIframeMode">
       Abstract away table related functionality
     </h1>
-    <p class="mb-4 text-gray-800">Using Data Source and Directives</p>
+    <p *ngIf="!isIframeMode" class="mb-4 text-gray-800">Using Data Source and Directives</p>
     <app-users></app-users>
   </div>
-  <footer class="fixed bottom-0 left-0 flex items-center justify-between w-full h-10 px-4 md:px-10">
+  <footer *ngIf="!isIframeMode" class="fixed bottom-0 left-0 flex items-center justify-between w-full h-10 px-4 md:px-10">
     <a href="https://sreyaj.dev" class="flex space-x-1 font-semibold">
       <p class="text-sm">sreyaj.dev</p>
     </a>
